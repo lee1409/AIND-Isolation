@@ -27,18 +27,33 @@ def custom_score(game, player):
         An instance of `isolation.Board` encoding the current state of the
         game (e.g., player locations and blocked cells).
 
-    player : object
-        A player instance in the current game (i.e., an object corresponding to
-        one of the player objects `game.__player_1__` or `game.__player_2__`.)
+        player : object
+            A player instance in the current game (i.e., an object corresponding to
+            one of the player objects `game.__player_1__` or `game.__player_2__`.)
 
     Returns
     -------
     float
         The heuristic value of the current game state to the specified player.
     """
+    if game.is_loser(player):
+        return float("-inf")
+    if game.is_winner(player):
+        return float("inf")
 
-    # TODO: finish this function!
-    return weighted_chances_heuristic(game, player)
+    blank_spaces = len(game.get_blank_spaces())
+    spaces = float(game.width * game.height)
+    m = 1 - blank_spaces / spaces
+
+    if m < 1/3.0:
+        center_x, center_y = game.width//2, game.height//2
+        y, x = game.get_player_location(player)
+        return (center_x - x) ** 2 + (center_y - y) ** 2
+
+    elif m < 2/3.0:
+        return weighted_chances_heuristic(game, player)
+    else:
+        return weighted_chances_heuristic_2(game, player)
 
 
 def aggressive_heuristic(game, player):
@@ -303,7 +318,8 @@ class CustomPlayer:
             return self.score(game, self), (-1, -1)
 
         for move in possible_moves:
-            score, _move = self.minimax(game.forecast_move(move), depth - 1, not maximizing_player)
+            score, _move = self.minimax(game.forecast_move(
+                move), depth - 1, not maximizing_player)
 
             if maximizing_player:
                 if score >= ret_score:
@@ -370,7 +386,8 @@ class CustomPlayer:
             return self.score(game, self), (-1, -1)
 
         for move in possible_moves:
-            score, _move = self.alphabeta(game.forecast_move(move), depth - 1, alpha, beta, not maximizing_player)
+            score, _move = self.alphabeta(game.forecast_move(
+                move), depth - 1, alpha, beta, not maximizing_player)
 
             if maximizing_player:
                 if score >= ret_score:

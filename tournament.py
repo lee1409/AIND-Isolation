@@ -30,10 +30,10 @@ from sample_players import RandomPlayer
 from sample_players import null_score
 from sample_players import open_move_score
 from sample_players import improved_score
-from game_agent import CustomPlayer
+from game_agent import CustomPlayer, custom_score
 from game_agent import aggressive_heuristic, defensive_heuristic, maximizing_win_chances_heuristic, minimizing_losing_chances_heuristic, chances_heuristic, weighted_chances_heuristic, weighted_chances_heuristic_2
 
-NUM_MATCHES = 500  # number of matches against each opponent
+NUM_MATCHES = 10  # number of matches against each opponent
 TIME_LIMIT = 150  # number of milliseconds before timeout
 
 TIMEOUT_WARNING = "One or more agents lost a match this round due to " + \
@@ -167,7 +167,9 @@ def main():
                    Agent(CustomPlayer(score_fn=minimizing_losing_chances_heuristic, **CUSTOM_ARGS), "Student4"),
                    Agent(CustomPlayer(score_fn=chances_heuristic, **CUSTOM_ARGS), "Student5"),
                    Agent(CustomPlayer(score_fn=weighted_chances_heuristic, **CUSTOM_ARGS), "Student6"),
-                   Agent(CustomPlayer(score_fn=weighted_chances_heuristic_2, **CUSTOM_ARGS), "Student7")]
+                   Agent(CustomPlayer(score_fn=weighted_chances_heuristic_2, **CUSTOM_ARGS), "Student7"),
+                   Agent(CustomPlayer(score_fn=custom_score, **CUSTOM_ARGS), "GROUP_1")]
+                   
 
     print(DESCRIPTION)
     for agentUT in test_agents:
